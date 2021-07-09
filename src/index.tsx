@@ -1,268 +1,243 @@
 /**
- * Created by nghinv on Fri Jun 18 2021
+ * Created by nghinv on Thu Jul 08 2021
  * Copyright (c) 2021 nghinv@lumi.biz
  */
 
-import React, { useCallback, useRef, useMemo, useImperativeHandle } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, TextInputProps, StyleProp, ViewStyle, TextStyle, LayoutChangeEvent, useWindowDimensions, Platform } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, Easing, withTiming } from 'react-native-reanimated';
-import { Icon } from '@nghinv/react-native-icons';
+import React, { useMemo } from 'react';
+import { View, StyleSheet, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import Animated, { useSharedValue, useAnimatedGestureHandler, useAnimatedStyle, withSpring, measure, useAnimatedRef, scrollTo, useAnimatedScrollHandler, withTiming } from 'react-native-reanimated';
 import equals from 'react-fast-compare';
+import { snapPoint } from 'react-native-redash';
+import { Alphabet, springConfig, timingConfig } from './model';
+import Section from './Section';
+import Character from './Character';
+import type { DataType, ItemType } from './types';
 
-const IS_ANDROID = Platform.OS === 'android';
-
-export const springConfig = {
-  stiffness: 1000,
-  damping: 500,
-  mass: 3,
-  overshootClamping: true,
-  restDisplacementThreshold: 0.01,
-  restSpeedThreshold: 0.01,
-};
-
-export const timingConfig = {
-  duration: 250,
-  easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-};
-
-const hitSlop = {
-  top: 8,
-  bottom: 8,
-  left: 8,
-  right: 8,
-};
-
-const TextInputTheme = {
-  dark: {
-    backgroundColor: 'transparent',
-    placeholderColor: '#636366',
-    textInputBackground: 'rgba(44,44,46,0.8)',
-    textColor: 'white',
-    selectionColor: '#2979ff',
-    clearIconColor: '#c7c7cc',
-    searchIconColor: '#b0b0b2',
-    textButtonColor: '#2979ff',
-  },
-  light: {
-    backgroundColor: 'transparent',
-    placeholderColor: '#8e8e93',
-    textInputBackground: 'rgba(142,142,147,0.12)',
-    textColor: 'black',
-    selectionColor: '#2979ff',
-    clearIconColor: '#c7c7cc',
-    searchIconColor: '#8e8e93',
-    textButtonColor: '#2979ff',
-  },
-};
-
-type CustomTextInputProps = Omit<TextInputProps, 'clearButtonMode' | 'style'>;
-
-export type InputThemeType = {
-  backgroundColor?: string;
-  placeholderColor?: string;
-  textInputBackground?: string;
-  textColor?: string;
-  selectionColor?: string;
-  clearIconColor?: string;
-  searchIconColor?: string;
-  textButtonColor?: string;
+interface AlphabetListProps {
+  data: DataType;
+  showAllHeader?: boolean;
+  renderHeader?: (header: string) => React.ReactNode;
+  renderItem?: (data: ItemType) => React.ReactNode;
+  trackSize?: number;
+  trackColor?: string;
+  charHeight?: number;
+  trackScale?: number;
+  lineWidth?: number;
+  textColorActive?: string;
+  textInactiveColor?: string;
+  charStyle?: StyleProp<TextStyle>;
+  headerTitleColor?: string;
+  headerTitleStyle?: StyleProp<TextStyle>;
+  headerStyle?: StyleProp<ViewStyle>;
 }
 
-interface SearchBarProps extends CustomTextInputProps {
-  containerStyle?: StyleProp<ViewStyle>;
-  width?: number | string;
-  height?: number;
-  borderRadius?: number;
-  textInputStyle?: StyleProp<TextStyle>;
-  cancelButton?: boolean;
-  cancelTitle?: string;
-  cancelTitleStyle?: StyleProp<TextStyle>;
-  theme?: InputThemeType;
-  isDarkTheme?: boolean;
-  onFocus?: () => void;
-  onBlur?: () => void;
-  onSubmitEditing?: () => void;
-  onChangeText?: (value: string) => void;
-}
-
-function SearchBarComponent(props: SearchBarProps, ref: React.Ref<any>) {
-  const {
-    containerStyle,
-    width,
-    height,
-    borderRadius,
-    textInputStyle,
-    cancelButton,
-    cancelTitle,
-    cancelTitleStyle,
-    theme,
-    isDarkTheme,
-    onFocus,
-    onBlur,
-    onSubmitEditing,
-    onChangeText,
-    ...otherProps
-  } = props;
-  const refInput = useRef<TextInput>(null);
-  const isFocus = useSharedValue(false);
-  const clearButton = useSharedValue(props.value?.length as number > 0);
-  const cancelButtonWidth = useSharedValue(40);
-  const dimensions = useWindowDimensions();
-
-  const themeStyle = useMemo(() => ({
-    ...(isDarkTheme ? TextInputTheme.dark : TextInputTheme.light),
-    ...theme,
-  }), [theme, isDarkTheme]);
-
-  const onCancel = useCallback(() => {
-    refInput.current?.blur();
-  }, [refInput]);
-
-  const onCancelLayout = useCallback((event: LayoutChangeEvent) => {
-    cancelButtonWidth.value = event.nativeEvent.layout.width;
-  }, [cancelButtonWidth]);
-
-  const onClear = useCallback(() => {
-    refInput.current?.clear();
-    clearButton.value = false;
-    onChangeText?.('');
-  }, [refInput, clearButton, onChangeText]);
-
-  const onTextInputFocus = useCallback(() => {
-    isFocus.value = true;
-    onFocus?.();
-  }, [isFocus, onFocus]);
-
-  const onTextInputBlur = useCallback(() => {
-    isFocus.value = false;
-    onBlur?.();
-  }, [isFocus, onBlur]);
-
-  const onTextInputSubmitEditing = useCallback(() => {
-    isFocus.value = false;
-    onSubmitEditing?.();
-  }, [isFocus, onSubmitEditing]);
-
-  const onChangeTextInput = useCallback((text: string) => {
-    onChangeText?.(text);
-    if (text.length > 0) {
-      clearButton.value = true;
-    } else {
-      clearButton.value = false;
-    }
-  }, [clearButton, onChangeText]);
-
-  useImperativeHandle(ref, () => ({
-    clear: () => {
-      onClear();
-    },
-    focus: () => {
-      refInput.current?.focus();
-    },
-    blur: () => {
-      refInput.current?.blur();
-    },
+function createSharedVariables(sections: Array<any>) {
+  const sectionsData = sections.map((char) => ({
+    position: useSharedValue(0),
+    ref: useAnimatedRef(),
+    key: char,
   }));
 
-  const inputStyle = useAnimatedStyle(() => {
-    if (!cancelButton) {
-      return {};
+  return {
+    sectionsData,
+  };
+}
+
+function AlphabetList(props: AlphabetListProps) {
+  const {
+    data,
+    showAllHeader = false,
+    renderHeader,
+    renderItem,
+    trackSize = 18,
+    trackColor = 'white',
+    charHeight = 20,
+    trackScale = 1.5,
+    lineWidth = 20,
+    textColorActive = 'tomato',
+    textInactiveColor = 'white',
+    charStyle,
+    headerTitleColor,
+    headerTitleStyle,
+    headerStyle,
+  } = props;
+  const translateY = useSharedValue(0);
+  const scale = useSharedValue(1);
+  const isGesture = useSharedValue(false);
+  const isGestureAnim = useSharedValue(false);
+  const isComputed = useSharedValue(false);
+  const charIndex = useSharedValue(0);
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+
+  const Sections = useMemo(() => {
+    return showAllHeader ? Alphabet : Alphabet.filter(char => data.find(d => d.key.toLocaleUpperCase() === char.toLocaleUpperCase()));
+  }, [showAllHeader, data]);
+
+  const { sectionsData } = createSharedVariables(Sections);
+
+  const applyMeasure = () => {
+    'worklet';
+
+    if (!isComputed.value) {
+      let distance = 0;
+      sectionsData.forEach((s) => {
+        const { height } = measure(s.ref);
+        s.position.value = distance;
+        distance += height;
+      });
     }
 
-    return {
-      marginRight: withSpring(isFocus.value ? cancelButtonWidth.value + 16 : 0, springConfig),
-    };
+    isComputed.value = true;
+  };
+
+  const processScroll = (transY: number) => {
+    'worklet';
+
+    const index = Math.round(transY / charHeight);
+    if (index !== charIndex.value) {
+      charIndex.value = index;
+
+      const currentChar = Alphabet[index];
+      const findItem = sectionsData.filter(s => `${s.key}`.toLocaleUpperCase() === currentChar.toLocaleUpperCase())?.[0];
+      if (findItem) {
+        scrollTo(scrollRef, 0, findItem.position.value, true);
+      }
+    }
+  };
+
+  const onGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent, { y: number }>({
+    onStart: (event, ctx) => {
+      translateY.value = event.y - trackSize / 2;
+      ctx.y = translateY.value;
+      processScroll(translateY.value);
+      scale.value = trackScale;
+      isGesture.value = true;
+      isGestureAnim.value = true;
+      applyMeasure();
+    },
+    onActive: (event, ctx) => {
+      const newTranslate = event.translationY + ctx.y;
+      translateY.value = Math.max(0, Math.min(charHeight * (Alphabet.length - 1), newTranslate));
+      processScroll(translateY.value);
+    },
+    onFinish: (event) => {
+      scale.value = 1;
+      const snapPoints = Alphabet.map((_, index) => index * charHeight);
+      const newTranslate = snapPoint(translateY.value, event.velocityY, snapPoints);
+      processScroll(newTranslate);
+      translateY.value = withSpring(newTranslate, springConfig, () => {
+        isGestureAnim.value = false;
+      });
+      isGesture.value = false;
+    },
   });
 
-  const clearButtonStyle = useAnimatedStyle(() => {
-    const isShowClearButton = isFocus.value && clearButton.value;
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      if (isGestureAnim.value) return;
 
-    return {
-      opacity: withTiming(isShowClearButton ? 1 : 0, timingConfig),
-      transform: [
-        { scale: withTiming(isShowClearButton ? 1 : 0, timingConfig) },
-      ],
-    };
+      const transY = event.contentOffset.y;
+      let findIndex = -1;
+
+      sectionsData.forEach((s, index) => {
+        const current = sectionsData[index].position.value;
+        const next = sectionsData[index + 1]?.position.value ?? current;
+
+        if (current <= transY + 100 && transY < next) {
+          Alphabet.forEach((a, idx) => {
+            if (a === s.key) {
+              findIndex = idx;
+            }
+          });
+        }
+      });
+
+      if (findIndex !== -1) {
+        translateY.value = withTiming(findIndex * charHeight, timingConfig);
+      }
+    },
+    onBeginDrag: () => {
+      applyMeasure();
+    },
   });
 
-  const textStyle = useAnimatedStyle(() => {
+  const pointStyle = useAnimatedStyle(() => {
     return {
-      opacity: withTiming(isFocus.value ? 1 : 0, timingConfig),
       transform: [
-        { scale: withTiming(isFocus.value ? 1 : 0, timingConfig) },
-        { translateX: isFocus.value ? withTiming(0, { duration: 0 }) : withTiming(dimensions.width, { duration: 650 }) },
+        { translateY: (charHeight - trackSize) / 2 },
+        { translateY: translateY.value },
+        { translateX: withSpring((1 - scale.value) * (trackSize / 2), springConfig) },
+        { scale: withSpring(scale.value, springConfig) },
       ],
     };
   });
 
   return (
-    <View
-      style={[
-        {
-          width,
-          backgroundColor: themeStyle.backgroundColor,
-        },
-        containerStyle,
-      ]}
-    >
-      <View style={styles.container}>
-        <Animated.View
-          style={[
-            styles.viewTextInput,
+    <View style={styles.container}>
+      <View style={styles.viewLeft}>
+        <Animated.ScrollView
+          showsVerticalScrollIndicator={false}
+          ref={scrollRef}
+          scrollEventThrottle={16}
+          onScroll={scrollHandler}
+        >
+          {
+            Sections.map((header, index) => (
+              <Section
+                key={header}
+                index={index}
+                header={header}
+                sectionsData={sectionsData}
+                data={data}
+                renderHeader={renderHeader}
+                renderItem={renderItem}
+                headerTitleColor={headerTitleColor}
+                headerTitleStyle={headerTitleStyle}
+                headerStyle={headerStyle}
+              />
+            ))
+          }
+        </Animated.ScrollView>
+      </View>
+      <View style={styles.viewRight}>
+        <PanGestureHandler
+          onGestureEvent={onGestureEvent}
+        >
+          <Animated.View style={styles.viewCharacters}>
             {
-              height,
-              borderRadius,
-              backgroundColor: themeStyle.textInputBackground,
-            },
-            inputStyle,
-          ]}
-        >
-          <TextInput
-            returnKeyType='search'
-            autoCorrect={false}
-            multiline={false}
-            {...otherProps}
-            underlineColorAndroid='transparent'
-            clearButtonMode='never'
-            style={[styles.textInput, textInputStyle, { color: themeStyle.textColor }]}
-            placeholderTextColor={themeStyle.placeholderColor}
-            selectionColor={themeStyle.selectionColor}
-            onFocus={onTextInputFocus}
-            onBlur={onTextInputBlur}
-            onSubmitEditing={onTextInputSubmitEditing}
-            onChangeText={onChangeTextInput}
-            ref={refInput}
-          />
-          <Animated.View style={[styles.viewClear, clearButtonStyle]}>
-            <TouchableOpacity
-              style={[styles.clearButton, { backgroundColor: themeStyle.clearIconColor }]}
-              onPress={onClear}
-              hitSlop={hitSlop}
-            >
-              <Icon name='close' type='Ionicons' color='rgba(0, 0, 0, 0.6)' size={14} />
-            </TouchableOpacity>
-          </Animated.View>
-        </Animated.View>
-        <View
-          style={styles.searchIcon}
-        >
-          <Icon name='search' type='Ionicons' color={themeStyle.searchIconColor} size={18} />
-        </View>
-        {
-          cancelButton && (
+              Alphabet.map((char, index) => (
+                <Character
+                  key={char}
+                  text={char}
+                  index={index}
+                  translateY={translateY}
+                  isGesture={isGesture}
+                  charHeight={charHeight}
+                  trackSize={trackSize}
+                  trackScale={trackScale}
+                  lineWidth={lineWidth}
+                  textColorActive={textColorActive}
+                  textInactiveColor={textInactiveColor}
+                  charStyle={charStyle}
+                />
+              ))
+            }
             <Animated.View
-              style={[styles.viewCancelButton, textStyle]}
-            >
-              <TouchableOpacity
-                hitSlop={hitSlop}
-                onPress={onCancel}
-                onLayout={onCancelLayout}
-              >
-                <Text style={[styles.cancel, { color: themeStyle.textButtonColor }, cancelTitleStyle]}>{cancelTitle}</Text>
-              </TouchableOpacity>
-            </Animated.View>
-          )
-        }
+              style={[
+                {
+                  width: trackSize,
+                  height: trackSize,
+                  borderRadius: trackSize,
+                  backgroundColor: trackColor,
+                  position: 'absolute',
+                  right: 0,
+                },
+                pointStyle,
+              ]}
+            />
+          </Animated.View>
+        </PanGestureHandler>
       </View>
     </View>
   );
@@ -271,58 +246,19 @@ function SearchBarComponent(props: SearchBarProps, ref: React.Ref<any>) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  viewTextInput: {
     flex: 1,
+  },
+  viewLeft: {
+    flex: 1,
+  },
+  viewRight: {
+    paddingVertical: 16,
     justifyContent: 'center',
-    paddingRight: 30,
-    paddingLeft: 32,
   },
-  textInput: {
-    fontSize: 17,
-    fontWeight: '400',
-    lineHeight: 20,
-    letterSpacing: 0.5,
-    textAlignVertical: 'center',
-    padding: 0,
-    margin: 0,
-    paddingBottom: IS_ANDROID ? 2 : 0,
-  },
-  searchIcon: {
-    position: 'absolute',
-    paddingLeft: 8,
-  },
-  viewClear: {
-    position: 'absolute',
-    right: 8,
-  },
-  clearButton: {
-    backgroundColor: '#C7C7CC',
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  viewCancelButton: {
-    position: 'absolute',
-    right: 0,
-  },
-  cancel: {
-    fontSize: 17,
-    fontWeight: '500',
+  viewCharacters: {
+    minWidth: 40,
+    alignItems: 'flex-end',
   },
 });
 
-const SearchBar = React.forwardRef(SearchBarComponent);
-
-SearchBar.defaultProps = {
-  height: 40,
-  borderRadius: 12,
-  cancelButton: true,
-  cancelTitle: 'Cancel',
-  isDarkTheme: false,
-};
-
-export default React.memo(SearchBar, equals);
+export default React.memo(AlphabetList, equals);

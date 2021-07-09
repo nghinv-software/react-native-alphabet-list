@@ -1,30 +1,30 @@
-# @nghinv/react-native-search-bar
+# react-native-alphabet-list
 
-React Native SearchBar Component use reanimated 2 library
+React Native Alphabet List Component use reanimated 2 library
 
 ---
 
-[![CircleCI](https://circleci.com/gh/nghinv-software/react-native-search-bar.svg?style=svg)](https://circleci.com/gh/nghinv-software/react-native-search-bar)
+[![CircleCI](https://circleci.com/gh/nghinv-software/react-native-alphabet-list.svg?style=svg)](https://circleci.com/gh/nghinv-software/react-native-alphabet-list)
 [![Version][version-badge]][package]
 [![MIT License][license-badge]][license]
 [![All Contributors][all-contributors-badge]][all-contributors]
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 
 <p align="center">
-<img src="./assets/light.gif" width="300"/>
-<img src="./assets/dark.gif" width="300"/>
+<!-- <img src="./assets/light.gif" width="300"/>
+<img src="./assets/dark.gif" width="300"/> -->
 </p>
 
 ## Installation
 
 ```sh
-yarn add @nghinv/react-native-search-bar
+yarn add react-native-alphabet-list
 ```
 
 or 
 
 ```sh
-npm install @nghinv/react-native-search-bar
+npm install react-native-alphabet-list
 ```
 
 ## Usage
@@ -32,24 +32,37 @@ npm install @nghinv/react-native-search-bar
 ```js
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import SearchBar from '@nghinv/react-native-search-bar';
+import AlphabetList from 'react-native-alphabet-list';
+
+const DATA: Array<{ name: string, key: CharType }> = [];
+
+Alphabet.forEach(char => {
+  const random = Math.round(8 * Math.random());
+  if (random > 0) {
+    for (let i = 0; i < random; i++) {
+      const contact = `${char.toLocaleUpperCase()} - Contact ${i + 1}`;
+      DATA.push({
+        name: contact,
+        key: char as CharType,
+      });
+    }
+  }
+});
 
 function App() {
-  const [text, setText] = useState('');
-
-  const onChangeText = useCallback((value) => {
-    setText(value);
-  }, []);
+  const renderItem = ({ item }: ItemType) => {
+    return (
+      <View style={styles.viewContent}>
+        <Text style={styles.txtContent}>{item.name}</Text>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <SearchBar
-        placeholder='Search'
-        containerStyle={styles.textInput}
-        cancelTitle='Huỷ'
-        value={text}
-        onChangeText={onChangeText}
-        // theme={theme.textInput}
+      <AlphabetList
+        data={DATA}
+        renderItem={renderItem}
       />
     </View>
   );
@@ -60,10 +73,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 24,
   },
-  textInput: {
-    marginTop: 40,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+  viewContent: {
+    paddingRight: 16,
+    paddingLeft: 40,
+    marginBottom: 24,
+  },
+  txtContent: {
+    fontSize: 16,
+    color: 'white',
   },
 });
 
@@ -74,64 +91,26 @@ export default App;
 
 | Property | Type | Default | Description |
 |----------|:----:|:-------:|-------------|
-| containerStyle | `ViewStyle` | `undefined` |  |
-| textInputStyle | `TextStyle` | `undefined` |  |
-| width | `number \| string` | `undefined` |  |
-| height | `number` | `44` |  |
-| borderRadius | `number` | `12` |  |
-| cancelButton | `boolean` | `true` | Show, hide cancel button |
-| cancelTitle | `string` | `Cancel` |  |
-| cancelTitle | `string` | `Cancel` |  |
-| cancelTitleStyle | `TextStyle` | `undefined` |  |
-| onFocus | `() => void` | `undefined` |  |
-| onBlur | `() => void` | `undefined` |  |
-| onSubmitEditing | `() => void` | `undefined` |  |
-| onChangeText | `(value: string) => void` | `undefined` |  |
-| isDarkTheme | `boolean` | `false` |  |
-| theme | `InputThemeType` |  |  |
+| data | `Array<{ key: string, [key string]: any }>` | `undefined` |  |
+| renderHeader | `(header: string) => React.ReactNode` | `undefined` |  |
+| renderItem | `({ item, index }) => React.ReactNode` | `undefined` |
+| showAllHeader | `boolean` | `false` |  |
+| trackSize | `number` | `18` |  |
+| trackColor | `string` | `white` |  |
+| charHeight | `number` | `20` |  |
+| trackScale | `number` | `1.5` |  |
+| lineWidth | `number` | `20` |  |
+| trackScale | `number` | `1.5` |  |
+| textColorActive | `string` | `tomato` |  |
+| textInactiveColor | `string` | `white` |  |
+| headerTitleColor | `string` | `white` |  |
+| charStyle | `TextStyle` | `undefined` |  |
+| headerTitleStyle | `TextStyle` | `undefined` |  |
+| headerStyle | `ViewStyle` | `undefined` |  |
 
-
-- **InputThemeType**
-
-| Property | Type | Default | Description |
-|----------|:----:|:-------:|-------------|
-| backgroundColor | `string` |  |  |
-| placeholderColor | `string` |  |  |
-| textInputBackground | `string` |  |  |
-| textColor | `string` |  |  |
-| selectionColor | `string` |  |  |
-| clearIconColor | `string` |  |  |
-| textButtonColor | `string` |  | Cancel title color |
-
-```
-TextInputThemeDefault = {
-  dark: {
-    backgroundColor: 'transparent',
-    placeholderColor: '#636366',
-    textInputBackground: 'rgba(44,44,46,0.8)',
-    textColor: 'white',
-    selectionColor: '#2979ff',
-    clearIconColor: '#c7c7cc',
-    searchIconColor: '#b0b0b2',
-    textButtonColor: '#2979ff',
-  },
-  light: {
-    backgroundColor: 'transparent',
-    placeholderColor: '#8e8e93',
-    textInputBackground: 'rgba(142,142,147,0.12)',
-    textColor: 'black',
-    selectionColor: '#2979ff',
-    clearIconColor: '#c7c7cc',
-    searchIconColor: '#8e8e93',
-    textButtonColor: '#2979ff',
-  },
-};
-```
-
-
-[version-badge]: https://img.shields.io/npm/v/@nghinv/react-native-search-bar.svg?style=flat-square
-[package]: https://www.npmjs.com/package/@nghinv/react-native-search-bar
-[license-badge]: https://img.shields.io/npm/l/@nghinv/react-native-search-bar.svg?style=flat-square
+[version-badge]: https://img.shields.io/npm/v/react-native-alphabet-list.svg?style=flat-square
+[package]: https://www.npmjs.com/package/react-native-alphabet-list
+[license-badge]: https://img.shields.io/npm/l/react-native-alphabet-list.svg?style=flat-square
 [license]: https://opensource.org/licenses/MIT
 [all-contributors-badge]: https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square
 [all-contributors]: #contributors

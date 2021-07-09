@@ -1,7 +1,7 @@
 {
-  "name": "@nghinv/react-native-search-bar",
+  "name": "react-native-alphabet-list",
   "version": "0.0.1",
-  "description": "React Native SearchBar Component",
+  "description": "React Native Alphabet List Component",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -26,16 +26,18 @@
     "react-native",
     "ios",
     "android",
-    "search",
+    "atoz",
+    "alphabet",
+    "list",
     "component"
   ],
-  "repository": "https://github.com/nghinv-software/react-native-search-bar",
+  "repository": "https://github.com/nghinv-software/react-native-alphabet-list",
   "author": "NghiNV <nguyennghidt6@gmail.com> (https://github.com/nghi-nv)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nghinv-software/react-native-search-bar/issues"
+    "url": "https://github.com/nghinv-software/react-native-alphabet-list/issues"
   },
-  "homepage": "https://github.com/nghinv-software/react-native-search-bar#readme",
+  "homepage": "https://github.com/nghinv-software/react-native-alphabet-list#readme",
   "publishConfig": {
     "access": "public",
     "cache": "~/.npm",
@@ -67,8 +69,8 @@
     "react-native": "*"
   },
   "dependencies": {
+    "react-native-redash": "^16.0.11",
     "react-fast-compare": "*",
-    "@nghinv/react-native-icons": "^1.0.6",
     "react-native-gesture-handler": "*",
     "react-native-reanimated": ">=2.0.0-rc.0"
   },
