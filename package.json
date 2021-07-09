@@ -1,5 +1,5 @@
 {
-  "name": "react-native-alphabet-list",
+  "name": "@nghinv/react-native-alphabet-list",
   "version": "0.0.1",
   "description": "React Native Alphabet List Component",
   "main": "lib/commonjs/index",

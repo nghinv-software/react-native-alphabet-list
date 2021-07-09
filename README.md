@@ -1,4 +1,4 @@
-# react-native-alphabet-list
+# @nghinv/react-native-alphabet-list
 
 React Native Alphabet List Component use reanimated 2 library
 
@@ -17,13 +17,13 @@ React Native Alphabet List Component use reanimated 2 library
 ## Installation
 
 ```sh
-yarn add react-native-alphabet-list
+yarn add @nghinv/react-native-alphabet-list
 ```
 
 or 
 
 ```sh
-npm install react-native-alphabet-list
+npm install @nghinv/react-native-alphabet-list
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ npm install react-native-alphabet-list
 ```js
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import AlphabetList from 'react-native-alphabet-list';
+import AlphabetList from '@nghinv/react-native-alphabet-list';
 
 const DATA: Array<{ name: string, key: CharType }> = [];
 
@@ -107,9 +107,9 @@ export default App;
 | headerTitleStyle | `TextStyle` | `undefined` |  |
 | headerStyle | `ViewStyle` | `undefined` |  |
 
-[version-badge]: https://img.shields.io/npm/v/react-native-alphabet-list.svg?style=flat-square
-[package]: https://www.npmjs.com/package/react-native-alphabet-list
-[license-badge]: https://img.shields.io/npm/l/react-native-alphabet-list.svg?style=flat-square
+[version-badge]: https://img.shields.io/npm/v/@nghinv/react-native-alphabet-list.svg?style=flat-square
+[package]: https://www.npmjs.com/package/@nghinv/react-native-alphabet-list
+[license-badge]: https://img.shields.io/npm/l/@nghinv/react-native-alphabet-list.svg?style=flat-square
 [license]: https://opensource.org/licenses/MIT
 [all-contributors-badge]: https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square
 [all-contributors]: #contributors
