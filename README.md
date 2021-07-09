@@ -11,8 +11,7 @@ React Native Alphabet List Component use reanimated 2 library
 [![PRs Welcome][prs-welcome-badge]][prs-welcome]
 
 <p align="center">
-<!-- <img src="./assets/light.gif" width="300"/>
-<img src="./assets/dark.gif" width="300"/> -->
+<img src="./assets/demo.gif" width="300"/>
 </p>
 
 ## Installation
