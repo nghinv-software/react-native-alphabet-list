@@ -32,6 +32,8 @@ npm install @nghinv/react-native-alphabet-list
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import AlphabetList from '@nghinv/react-native-alphabet-list';
+import { Alphabet } from '@nghinv/react-native-alphabet-list/utils';
+import { CharType, ItemType } from '@nghinv/react-native-alphabet-list/types';
 
 const DATA: Array<{ name: string, key: CharType }> = [];
 

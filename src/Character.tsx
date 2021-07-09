@@ -12,7 +12,7 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
-import { springConfig } from './model';
+import { springConfig } from './utils';
 
 interface CharacterProps {
   text: string;

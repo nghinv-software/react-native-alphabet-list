@@ -9,7 +9,7 @@ import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-g
 import Animated, { useSharedValue, useAnimatedGestureHandler, useAnimatedStyle, withSpring, measure, useAnimatedRef, scrollTo, useAnimatedScrollHandler, withTiming } from 'react-native-reanimated';
 import equals from 'react-fast-compare';
 import { snapPoint } from 'react-native-redash';
-import { Alphabet, springConfig, timingConfig } from './model';
+import { Alphabet, springConfig, timingConfig } from './utils';
 import Section from './Section';
 import Character from './Character';
 import type { DataType, ItemType } from './types';
