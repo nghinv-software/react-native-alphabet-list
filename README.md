@@ -26,6 +26,10 @@ or
 npm install @nghinv/react-native-alphabet-list
 ```
 
+```sh
+yarn add react-native-gesture-handler react-native-reanimated react-native-redash react-fast-compare
+```
+
 ## Usage
 
 ```js
@@ -108,6 +112,11 @@ export default App;
 | charStyle | `TextStyle` | `undefined` |  |
 | headerTitleStyle | `TextStyle` | `undefined` |  |
 | headerStyle | `ViewStyle` | `undefined` |  |
+
+---
+## Credits
+
+- [@Nghi-NV](https://github.com/Nghi-NV)
 
 [version-badge]: https://img.shields.io/npm/v/@nghinv/react-native-alphabet-list.svg?style=flat-square
 [package]: https://www.npmjs.com/package/@nghinv/react-native-alphabet-list

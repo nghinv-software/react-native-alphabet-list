@@ -1,6 +1,6 @@
 {
   "name": "@nghinv/react-native-alphabet-list",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React Native Alphabet List Component",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -29,7 +29,8 @@
     "atoz",
     "alphabet",
     "list",
-    "component"
+    "component",
+    "react-native-alphabet-list"
   ],
   "repository": "https://github.com/nghinv-software/react-native-alphabet-list",
   "author": "NghiNV <nguyennghidt6@gmail.com> (https://github.com/nghi-nv)",
@@ -39,9 +40,7 @@
   },
   "homepage": "https://github.com/nghinv-software/react-native-alphabet-list#readme",
   "publishConfig": {
-    "access": "public",
-    "cache": "~/.npm",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
@@ -66,9 +65,7 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
-  },
-  "dependencies": {
+    "react-native": "*",
     "react-native-redash": "^16.0.11",
     "react-fast-compare": "*",
     "react-native-gesture-handler": "*",
