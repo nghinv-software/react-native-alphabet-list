@@ -13,7 +13,6 @@ import {
   StyleProp,
 } from 'react-native';
 import equals from 'react-fast-compare';
-
 interface HeaderProps {
   title: string;
   headerTitleColor?: string;
