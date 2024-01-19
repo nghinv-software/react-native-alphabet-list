@@ -85,8 +85,8 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E --no-verify HUSKY_GIT_PARAMS",
-      "pre-commit --no-verify": "yarn lint && yarn typescript"
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint && yarn typescript"
     }
   },
   "commitlint": {
