@@ -1,6 +1,8 @@
-# @nghinv/react-native-alphabet-list
+# @Raiden-16F7/react-native-alphabet-list
 
-React Native Alphabet List Component use reanimated 2 library
+React Native Alphabet List Component use reanimated 2 library with refresh control
+<br>
+Fork of @nghinv/react-native-alphabet-list
 
 ---
 
@@ -17,13 +19,13 @@ React Native Alphabet List Component use reanimated 2 library
 ## Installation
 
 ```sh
-yarn add @nghinv/react-native-alphabet-list
+yarn add @raiden-16f7/react-native-alphabet-list
 ```
 
 or 
 
 ```sh
-npm install @nghinv/react-native-alphabet-list
+npm install @raiden-16f7/react-native-alphabet-list
 ```
 
 ```sh
@@ -112,11 +114,12 @@ export default App;
 | charStyle | `TextStyle` | `undefined` |  |
 | headerTitleStyle | `TextStyle` | `undefined` |  |
 | headerStyle | `ViewStyle` | `undefined` |  |
+| refreshControl | `RefreshControl` | `undefined` |  |
 
 ---
 ## Credits
 
-- [@Nghi-NV](https://github.com/Nghi-NV)
+- Fork of [@Nghi-NV](https://github.com/Nghi-NV)
 
 [version-badge]: https://img.shields.io/npm/v/@nghinv/react-native-alphabet-list.svg?style=flat-square
 [package]: https://www.npmjs.com/package/@nghinv/react-native-alphabet-list
