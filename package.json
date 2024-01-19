@@ -1,5 +1,5 @@
 {
-  "name": "@raiden-16f7/react-native-alphabet-list",
+  "name": "@raiden16f7/react-native-alphabet-list",
   "version": "0.0.1",
   "description": "React Native Alphabet List",
   "main": "lib/commonjs/index",
