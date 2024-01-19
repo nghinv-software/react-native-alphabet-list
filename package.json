@@ -19,7 +19,6 @@
     "test": "jest",
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "bob build",
     "release": "release-it"
   },
   "keywords": [
@@ -32,13 +31,16 @@
     "component",
     "react-native-alphabet-list"
   ],
-  "repository": "https://github.com/raiden-16f7/react-native-alphabet-list",
-  "author": "Raiden-16F7 <fahad.rizwan07@gmail.com> (https://github.com/Raiden-16F7)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Raiden-16F7/react-native-alphabet-list.git"
+  },
+  "author": "raiden16f7 <fahad.rizwan07@gmail.com> (https://github.com/Raiden-16F7)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/raiden-16f7/react-native-alphabet-list/issues"
+    "url": "https://github.com/Raiden-16F7/react-native-alphabet-list/issues"
   },
-  "homepage": "https://github.com/raiden-16f7/react-native-alphabet-list#readme",
+  "homepage": "https://github.com/Raiden-16F7/react-native-alphabet-list#readme",
   "publishConfig": {
     "access": "public"
   },
@@ -131,18 +133,7 @@
     "trailingComma": "es5",
     "useTabs": false
   },
-  "react-native-builder-bob": {
-    "source": "src",
-    "output": "lib",
-    "targets": [
-      "commonjs",
-      "module",
-      [
-        "typescript",
-        {
-          "project": "tsconfig.build.json"
-        }
-      ]
-    ]
+  "directories": {
+    "lib": "lib"
   }
 }
