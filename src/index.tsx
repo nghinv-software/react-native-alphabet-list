@@ -3,6 +3,8 @@
  * Copyright (c) 2021 nghinv@lumi.biz
  */
 
+// Modified by Raiden-16F7 on Fri Jan 19 2024
+
 import React, { useMemo } from 'react';
 import { View, StyleSheet, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
@@ -15,6 +17,9 @@ import Character from './Character';
 import type { DataType, ItemType } from './types';
 
 interface AlphabetListProps {
+   style?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  indexStyle?: StyleProp<ViewStyle>;
   data: DataType;
   showAllHeader?: boolean;
   renderHeader?: (header: string) => React.ReactNode;
@@ -30,6 +35,7 @@ interface AlphabetListProps {
   headerTitleColor?: string;
   headerTitleStyle?: StyleProp<TextStyle>;
   headerStyle?: StyleProp<ViewStyle>;
+  refreshControl?: React.ReactElement;
 }
 
 function createSharedVariables(sections: Array<any>) {
@@ -46,6 +52,9 @@ function createSharedVariables(sections: Array<any>) {
 
 function AlphabetList(props: AlphabetListProps) {
   const {
+    style,
+    contentContainerStyle,
+    indexStyle,
     data,
     showAllHeader = false,
     renderHeader,
@@ -61,6 +70,7 @@ function AlphabetList(props: AlphabetListProps) {
     headerTitleColor,
     headerTitleStyle,
     headerStyle,
+    refreshControl
   } = props;
   const translateY = useSharedValue(0);
   const scale = useSharedValue(1);
@@ -99,7 +109,7 @@ function AlphabetList(props: AlphabetListProps) {
       charIndex.value = index;
 
       const currentChar = Alphabet[index];
-      const findItem = sectionsData.filter(s => `${s.key}`.toLocaleUpperCase() === currentChar.toLocaleUpperCase())?.[0];
+      const findItem = sectionsData.filter(s => `${s.key}`.toLocaleUpperCase() === currentChar?.toLocaleUpperCase())?.[0];
       if (findItem) {
         scrollTo(scrollRef, 0, findItem.position.value, true);
       }
@@ -175,12 +185,14 @@ function AlphabetList(props: AlphabetListProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.viewLeft}>
+      <View style={[styles.viewLeft,style]}>
         <Animated.ScrollView
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={contentContainerStyle}
           ref={scrollRef}
           scrollEventThrottle={16}
           onScroll={scrollHandler}
+          refreshControl={refreshControl}
         >
           {
             Sections.map((header, index) => (
@@ -204,7 +216,7 @@ function AlphabetList(props: AlphabetListProps) {
         <PanGestureHandler
           onGestureEvent={onGestureEvent}
         >
-          <Animated.View style={styles.viewCharacters}>
+          <Animated.View style={[styles.viewCharacters,indexStyle]}>
             {
               Alphabet.map((char, index) => (
                 <Character
