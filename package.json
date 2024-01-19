@@ -1,6 +1,6 @@
 {
   "name": "@raiden16f7/react-native-alphabet-list",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "React Native Alphabet List",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",

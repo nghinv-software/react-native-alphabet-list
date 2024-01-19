@@ -6,7 +6,6 @@ Fork of @nghinv/react-native-alphabet-list
 
 ---
 
-[![CircleCI](https://circleci.com/gh/nghinv-software/react-native-alphabet-list.svg?style=svg)](https://circleci.com/gh/nghinv-software/react-native-alphabet-list)
 [![Version][version-badge]][package]
 [![MIT License][license-badge]][license]
 [![All Contributors][all-contributors-badge]][all-contributors]
@@ -132,9 +131,9 @@ export default App;
 
 - Fork of [@Nghi-NV](https://github.com/Nghi-NV)
 
-[version-badge]: https://img.shields.io/npm/v/@nghinv/react-native-alphabet-list.svg?style=flat-square
-[package]: https://www.npmjs.com/package/@nghinv/react-native-alphabet-list
-[license-badge]: https://img.shields.io/npm/l/@nghinv/react-native-alphabet-list.svg?style=flat-square
+[version-badge]: https://img.shields.io/npm/v/@raiden16f7/react-native-alphabet-list.svg?style=flat-square
+[package]: https://www.npmjs.com/package/@raiden-16f7/react-native-alphabet-list
+[license-badge]: https://img.shields.io/npm/l/@raiden16f7/react-native-alphabet-list.svg?style=flat-square
 [license]: https://opensource.org/licenses/MIT
 [all-contributors-badge]: https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square
 [all-contributors]: #contributors
